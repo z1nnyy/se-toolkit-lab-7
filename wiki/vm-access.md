@@ -15,8 +15,8 @@
 - [Connect to the VM (LOCAL)](#connect-to-the-vm-local)
 - [Create the non-root user `<user>` (REMOTE)](#create-the-non-root-user-user-remote)
 - [Set up the `SSH` key authentication for the user `<user>` (REMOTE)](#set-up-the-ssh-key-authentication-for-the-user-user-remote)
-- [Verify that you can connect to the VM by `SSH` as the user `<user>` (LOCAL)](#verify-that-you-can-connect-to-the-vm-by-ssh-as-the-user-user-local)
 - [Update the `SSH` config (LOCAL)](#update-the-ssh-config-local)
+- [Connect to the VM as the user `<user>` (LOCAL)](#connect-to-the-vm-as-the-user-user-local)
 - [Harden the `SSH` config (REMOTE)](#harden-the-ssh-config-remote)
 - [Restart `sshd` (REMOTE)](#restart-sshd-remote)
 - [Verify you can connect as the user `<user>` (LOCAL)](#verify-you-can-connect-as-the-user-user-local)
@@ -333,27 +333,6 @@ Complete these steps:
 
    <!-- TODO why these permissions are correct? -->
 
-## Verify that you can connect to the VM by `SSH` as the user `<user>` (LOCAL)
-
-> [!NOTE]
-> Replace [`<user>`](./operating-system.md#user-placeholder) with the actual [username](./operating-system.md#username).
-
-1. [Open a new `VS Code Terminal`](./vs-code.md#open-a-new-vs-code-terminal).
-
-2. To connect as the user `<user>`,
-
-   [run in the `VS Code Terminal`](./vs-code.md#run-a-command-in-the-vs-code-terminal):
-
-   ```terminal
-   ssh -i ~/.ssh/se_toolkit_key <user>@<your-vm-ip-address>
-   ```
-
-   Replace the placeholder [`<your-vm-ip-address>`](./vm.md#your-vm-ip-address-placeholder).
-
-3. Confirm the connection did not prompt for a password.
-
-4. [Exit the `SSH` shell session](./shell.md#exit-the-shell-session).
-
 ## Update the `SSH` config (LOCAL)
 
 > [!NOTE]
@@ -392,6 +371,28 @@ Complete these steps:
         PasswordAuthentication no
         UseKeychain yes
      ```
+
+## Connect to the VM as the user `<user>` (LOCAL)
+
+> [!NOTE]
+> Replace [`<user>`](./operating-system.md#user-placeholder) with the actual [username](./operating-system.md#username).
+
+1. To connect as the user `<user>`,
+
+   [run in the `VS Code Terminal`](./vs-code.md#run-a-command-in-the-vs-code-terminal):
+
+   ```terminal
+   ssh se-toolkit-vm
+   ```
+
+   Replace the placeholder [`<your-vm-ip-address>`](./vm.md#your-vm-ip-address-placeholder).
+
+2. To confirm you are logged in as the user `<user>`,
+   not [the user `root`](./linux.md#the-user-root),
+
+   Look at the [shell prompt](./shell.md#ssh-shell-prompt).
+
+   It should start with `<user>`.
 
 ## Harden the `SSH` config (REMOTE)
 
