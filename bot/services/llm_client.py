@@ -23,7 +23,11 @@ guessing. If the user asks an ambiguous question, ask a short clarifying questio
 For greetings or obvious gibberish, reply helpfully without tools.
 
 When tool results are available, summarize them clearly and include concrete numbers.
-If the user asks to compare labs, you may call multiple tools before answering.
+If the user asks to compare labs, rank labs, find the best lab, or find the worst lab,
+first get the lab list and then call the needed analytics tool for every relevant lab
+before answering. Do not stop after checking only one lab when the question asks about
+all labs. Do not ask a follow-up question if the available tools already let you finish
+the comparison.
 """
 
 
@@ -226,14 +230,55 @@ class LlmClient:
             {"role": "user", "content": user_text},
         ]
 
-        for _ in range(8):
+        for _ in range(16):
             response = self._chat(messages)
             message = response["choices"][0]["message"]
             tool_calls = message.get("tool_calls") or []
+            content = message.get("content")
 
             if not tool_calls:
-                content = message.get("content")
                 if isinstance(content, str) and content.strip():
+                    lower_content = content.lower()
+                    if any(
+                        phrase in lower_content
+                        for phrase in [
+                            "i will now check",
+                            "i will check",
+                            "i will continue checking",
+                            "i will continue",
+                            "i will call a tool",
+                            "i'll call a tool",
+                            "calling a tool",
+                            "let me check",
+                            "i'll check",
+                            "i need to check",
+                            "let me call a tool",
+                            "let me continue",
+                            "would you like me to check",
+                        ]
+                    ):
+                        messages.append(
+                            {
+                                "role": "assistant",
+                                "content": content,
+                            }
+                        )
+                        messages.append(
+                            {
+                                "role": "user",
+                                "content": (
+                                    "Continue the analysis by calling the needed tools now. "
+                                    "Do not ask me for permission if you already have enough "
+                                    "tools to continue. If you have enough data, give the final "
+                                    "answer instead of another progress update."
+                                ),
+                            }
+                        )
+                        print(
+                            "[summary] LLM stopped early; asking it to continue with tools",
+                            file=sys.stderr,
+                        )
+                        continue
                     return content.strip()
                 return "I couldn't produce a response yet. Try asking in a more specific way."
 
@@ -275,4 +320,4 @@ class LlmClient:
                 file=sys.stderr,
             )
 
-        raise LlmServiceError("LLM error: tool loop did not finish after 8 iterations.")
+        raise LlmServiceError("LLM error: tool loop did not finish after 16 iterations.")
