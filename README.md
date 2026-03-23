@@ -95,3 +95,30 @@ By the end of this lab, you should be able to say:
 ### Optional
 
 1. [Flutter Web Chatbot](./lab/tasks/optional/task-1.md)
+
+## Deploy
+
+To run the bot in Docker on your VM, make sure `.env.docker.secret` includes `BOT_TOKEN`,
+`LMS_API_KEY`, `LLM_API_KEY`, and `LLM_API_MODEL`. The compose setup wires the bot to the
+backend over the Docker network using `http://backend:8000`, and routes LLM traffic to the
+Qwen proxy on the host with `http://host.docker.internal:42005/v1`.
+
+Build and start the full stack on the VM:
+
+```terminal
+cd ~/se-toolkit-lab-7
+pkill -f "bot.py" 2>/dev/null
+docker compose --env-file .env.docker.secret up --build -d
+docker compose --env-file .env.docker.secret ps
+```
+
+Verify the deployment:
+
+```terminal
+docker compose --env-file .env.docker.secret ps bot
+docker compose --env-file .env.docker.secret logs bot --tail 20
+curl -sf http://localhost:42002/docs >/dev/null && echo "backend ok"
+```
+
+Then open Telegram and test `/start`, `/health`, `what labs are available?`, and
+`which lab has the lowest pass rate?`.
