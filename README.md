@@ -103,6 +103,19 @@ To run the bot in Docker on your VM, make sure `.env.docker.secret` includes `BO
 backend over the Docker network using `http://backend:8000`, and routes LLM traffic to the
 Qwen proxy on the host with `http://host.docker.internal:42005/v1`.
 
+Important runtime values for the bot container:
+
+- `BOT_TOKEN` — Telegram bot token from BotFather
+- `LMS_API_KEY` — must match the backend API key
+- `LLM_API_KEY` — API key for the Qwen proxy
+- `LLM_API_MODEL` — current model name used by the proxy
+
+Networking notes:
+
+- Inside Docker, the bot must use `http://backend:8000` instead of `localhost:42002`
+- Inside Docker, the Qwen proxy is reached through `http://host.docker.internal:42005/v1`
+- If the bot container starts but does not answer in Telegram, check `docker compose logs bot`
+
 Build and start the full stack on the VM:
 
 ```terminal
