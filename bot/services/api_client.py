@@ -53,5 +53,30 @@ class BackendClient:
     def get_items(self) -> list[dict[str, Any]]:
         return self._request("GET", "/items/")
 
+    def get_learners(self) -> list[dict[str, Any]]:
+        return self._request("GET", "/learners/")
+
+    def get_scores(self, lab: str) -> list[dict[str, Any]]:
+        return self._request("GET", "/analytics/scores", params={"lab": lab})
+
     def get_pass_rates(self, lab: str) -> list[dict[str, Any]]:
         return self._request("GET", "/analytics/pass-rates", params={"lab": lab})
+
+    def get_timeline(self, lab: str) -> list[dict[str, Any]]:
+        return self._request("GET", "/analytics/timeline", params={"lab": lab})
+
+    def get_groups(self, lab: str) -> list[dict[str, Any]]:
+        return self._request("GET", "/analytics/groups", params={"lab": lab})
+
+    def get_top_learners(self, lab: str, limit: int = 5) -> list[dict[str, Any]]:
+        return self._request(
+            "GET",
+            "/analytics/top-learners",
+            params={"lab": lab, "limit": str(limit)},
+        )
+
+    def get_completion_rate(self, lab: str) -> dict[str, Any]:
+        return self._request("GET", "/analytics/completion-rate", params={"lab": lab})
+
+    def trigger_sync(self) -> dict[str, Any]:
+        return self._request("POST", "/pipeline/sync")
