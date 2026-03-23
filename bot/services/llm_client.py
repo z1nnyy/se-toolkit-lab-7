@@ -243,9 +243,14 @@ class LlmClient:
                         phrase in lower_content
                         for phrase in [
                             "i will now check",
+                            "i will check",
+                            "i will call a tool",
+                            "i'll call a tool",
+                            "calling a tool",
                             "let me check",
                             "i'll check",
                             "i need to check",
+                            "let me call a tool",
                             "would you like me to check",
                         ]
                     ):
