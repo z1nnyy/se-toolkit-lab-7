@@ -25,13 +25,18 @@ def build_quick_actions() -> ReplyKeyboardMarkup:
 
 def build_llm_client() -> LlmClient:
     settings = load_settings()
+    if not settings.llm_api_key:
+        raise LlmServiceError("LLM error: LLM_API_KEY is required.")
+    if not settings.llm_api_base_url:
+        raise LlmServiceError("LLM error: LLM_API_BASE_URL is required.")
+
     backend_client = BackendClient(
         base_url=settings.lms_api_base_url,
         api_key=settings.lms_api_key or "",
     )
     return LlmClient(
         base_url=settings.llm_api_base_url,
-        api_key=settings.llm_api_key or "",
+        api_key=settings.llm_api_key,
         model=settings.llm_api_model or "qwen3-coder-plus",
         backend_client=backend_client,
     )
