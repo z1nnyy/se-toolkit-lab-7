@@ -18,7 +18,7 @@ def run_test_mode(command_text: str) -> int:
     handler = handlers.get(command)
 
     if handler is None:
-        print(f"Unknown command: {command}")
+        print(f"Unknown command: {command}. Use /help to see available commands.")
         return 0
 
     print(handler(args))
