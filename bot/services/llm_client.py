@@ -244,6 +244,8 @@ class LlmClient:
                         for phrase in [
                             "i will now check",
                             "i will check",
+                            "i will continue checking",
+                            "i will continue",
                             "i will call a tool",
                             "i'll call a tool",
                             "calling a tool",
@@ -251,6 +253,7 @@ class LlmClient:
                             "i'll check",
                             "i need to check",
                             "let me call a tool",
+                            "let me continue",
                             "would you like me to check",
                         ]
                     ):
