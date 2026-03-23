@@ -230,7 +230,7 @@ class LlmClient:
             {"role": "user", "content": user_text},
         ]
 
-        for _ in range(8):
+        for _ in range(16):
             response = self._chat(messages)
             message = response["choices"][0]["message"]
             tool_calls = message.get("tool_calls") or []
@@ -269,7 +269,8 @@ class LlmClient:
                                 "content": (
                                     "Continue the analysis by calling the needed tools now. "
                                     "Do not ask me for permission if you already have enough "
-                                    "tools to continue."
+                                    "tools to continue. If you have enough data, give the final "
+                                    "answer instead of another progress update."
                                 ),
                             }
                         )
@@ -319,4 +320,4 @@ class LlmClient:
                 file=sys.stderr,
             )
 
-        raise LlmServiceError("LLM error: tool loop did not finish after 8 iterations.")
+        raise LlmServiceError("LLM error: tool loop did not finish after 16 iterations.")
